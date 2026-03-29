@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elysia Residences — Luxury Apartments</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 120px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.55) 60%, rgba(10,10,10,0.95) 100%),
+        url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=85') center/cover no-repeat;
+      transform: scale(1.08);
+      will-change: transform;
+      transition: transform 8s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .hero-bg.loaded { transform: scale(1); }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 60%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 60px;
+      max-width: 800px;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroIn 0.8s ease 0.3s forwards;
+    }
+
+    .hero-eyebrow span {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: heroIn 0.9s ease 0.5s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold2);
+    }
+
+    .hero-sub {
+      font-size: 0.85rem;
+      color: var(--white2);
+      letter-spacing: 0.1em;
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroIn 0.8s ease 0.7s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroIn 0.8s ease 0.9s forwards;
+    }
+
+    @keyframes heroIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px; right: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 2;
+      opacity: 0;
+      animation: heroIn 0.8s ease 1.2s forwards;
+    }
+
+    .hero-scroll span {
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      writing-mode: vertical-rl;
+    }
+
+    .scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollLine 2s ease infinite;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.5); opacity: 0.5; }
+    }
+
+    .hero-stats {
+      position: absolute;
+      bottom: 0; right: 0;
+      display: flex;
+      z-index: 2;
+      opacity: 0;
+      animation: heroIn 0.8s ease 1s forwards;
+    }
+
+    .hero-stat {
+      padding: 28px 36px;
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid var(--border2);
+      border-top: 1px solid var(--border2);
+      text-align: center;
+    }
+
+    .hero-stat-num {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+      display: block;
+      margin-top: 6px;
+    }
+
+    /* ===== FEATURED SECTION ===== */
+    .featured {
+      padding: 140px 60px;
+      position: relative;
+    }
+
+    .featured::before {
+      content: 'FEATURED';
+      position: absolute;
+      top: 80px; right: 60px;
+      font-size: 8rem;
+      font-family: var(--font-serif);
+      color: rgba(201,168,76,0.03);
+      pointer-events: none;
+      letter-spacing: 0.1em;
+    }
+
+    .featured-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 70px;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .apt-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--bg3);
+    }
+
+    .apt-card:first-child {
+      grid-row: span 2;
+    }
+
+    .apt-card-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+      display: block;
+    }
+
+    .apt-card:first-child .apt-card-img {
+      height: 100%;
+      position: absolute;
+      inset: 0;
+    }
+
+    .apt-card:hover .apt-card-img {
+      transform: scale(1.07);
+    }
+
+    .apt-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 50%, transparent 100%);
+      transition: var(--transition);
+    }
+
+    .apt-card:hover .apt-card-overlay {
+      background: linear-gradient(to top, rgba(10,10,10,0.98) 0%, rgba(10,10,10,0.5) 60%, rgba(10,10,10,0.1) 100%);
+    }
+
+    .apt-card-info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 30px;
+      transform: translateY(8px);
+      transition: var(--transition);
+    }
+
+    .apt-card:hover .apt-card-info {
+      transform: translateY(0);
+    }
+
+    .apt-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--gold);
+      color: var(--bg);
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .apt-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .apt-card:first-child .apt-name { font-size: 1.9rem; }
+
+    .apt-location {
+      font-size: 0.7rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 14px;
+    }
+
+    .apt-details {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .apt-detail {
+      font-size: 0.65rem;
+      color: var(--white2);
+      letter-spacing: 0.05em;
+    }
+
+    .apt-detail strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .apt-price {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      color: var(--gold2);
+      margin-top: 8px;
+    }
+
+    .apt-card:first-child .apt-price { font-size: 1.8rem; }
+
+    /* Hover glow */
+    .apt-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid transparent;
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .apt-card:hover::after {
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: inset 0 0 40px rgba(201,168,76,0.05);
+    }
+
+    /* ===== LIFESTYLE ===== */
+    .lifestyle {
+      padding: 140px 60px;
+      background: var(--bg2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lifestyle::after {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .lifestyle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 80px;
+    }
+
+    .lifestyle-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .lifestyle-item img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      transition: transform 0.7s ease;
+      display: block;
+      filter: brightness(0.8) saturate(0.9);
+    }
+
+    .lifestyle-item:hover img {
+      transform: scale(1.05);
+      filter: brightness(0.7) saturate(1);
+    }
+
+    .lifestyle-item-label {
+      position: absolute;
+      bottom: 24px; left: 24px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lifestyle-item-label::before {
+      content: '';
+      width: 20px; height: 1px;
+      background: var(--gold);
+    }
+
+    .lifestyle-item:nth-child(1) { grid-column: span 2; }
+    .lifestyle-item:nth-child(1) img { height: 500px; }
+
+    /* ===== WHY US ===== */
+    .why-us {
+      padding: 140px 60px;
+      position: relative;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 80px;
+    }
+
+    .why-visual {
+      position: relative;
+    }
+
+    .why-img-main {
+      width: 100%;
+      height: 560px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.85);
+    }
+
+    .why-img-accent {
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 220px; height: 280px;
+      object-fit: cover;
+      border: 4px solid var(--bg);
+      box-shadow: var(--shadow);
+    }
+
+    .why-badge {
+      position: absolute;
+      top: 40px; left: -30px;
+      background: var(--gold);
+      color: var(--bg);
+      padding: 20px 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .why-badge-num {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 600;
+      display: block;
+      line-height: 1;
+    }
+
+    .why-badge-text {
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .why-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 50px;
+    }
+
+    .why-feature {
+      padding: 24px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      transition: var(--transition);
+    }
+
+    .why-feature:hover {
+      border-color: var(--border);
+      background: var(--glass2);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .why-feature-icon {
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+
+    .why-feature h4 {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .why-feature p {
+      font-size: 0.75rem;
+      line-height: 1.7;
+    }
+
+    /* ===== CTA BANNER ===== */
+    .cta-banner {
+      padding: 160px 60px;
+      background:
+        linear-gradient(135deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.7) 100%),
+        url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80') center/cover no-repeat fixed;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+
+    .cta-banner-content { position: relative; z-index: 1; }
+
+    .cta-banner h2 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+
+    .cta-banner h2 em { color: var(--gold2); font-style: italic; }
+
+    .cta-banner p {
+      font-size: 0.9rem;
+      color: var(--white2);
+      margin-bottom: 50px;
+      letter-spacing: 0.08em;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 1024px) {
+      .featured, .lifestyle, .why-us, .cta-banner { padding: 100px 30px; }
+      .featured-grid { grid-template-columns: 1fr 1fr; }
+      .apt-card:first-child { grid-row: auto; }
+      .apt-card:first-child .apt-card-img { position: relative; height: 280px; inset: auto; }
+      .why-grid { grid-template-columns: 1fr; gap: 50px; }
+      .why-visual { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-content { padding: 0 20px; }
+      .hero-title { font-size: clamp(2.8rem,9vw,4.5rem); }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+      .hero-stats { display: none; }
+      .hero-scroll { display: none; }
+      .featured, .lifestyle, .why-us, .cta-banner { padding: 80px 20px; }
+      .featured-header { flex-direction: column; gap: 20px; align-items: flex-start; }
+      .featured-grid { grid-template-columns: 1fr; gap: 2px; }
+      .lifestyle-grid { grid-template-columns: 1fr; }
+      .lifestyle-item:nth-child(1) { grid-column: span 1; }
+      .lifestyle-item:nth-child(1) img { height: 280px; }
+      .lifestyle-item img { height: 220px; }
+      .why-features { grid-template-columns: 1fr; }
+      .cta-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-logo">
+    <span class="logo-name">Elysia</span>
+    <span class="logo-tag">Luxury Residences</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="properties.html">Properties</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="contact.html" class="navbar-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="properties.html">Properties</a>
+  <a href="projects.html">Projects</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span>Hyderabad's Most Coveted Address</span>
+    </div>
+    <h1 class="hero-title">Elevate<br><em>Your Living</em></h1>
+    <p class="hero-sub">Premium Apartments Designed for Modern Life — Where Architecture Meets Aspiration</p>
+    <div class="hero-actions">
+      <a href="properties.html" class="btn-primary">
+        Explore Apartments
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </a>
+      <a href="contact.html" class="btn-outline">Book Site Visit</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num" data-target="12" data-suffix="+">0+</span>
+      <span class="hero-stat-label">Projects Delivered</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" data-target="850" data-suffix="+">0+</span>
+      <span class="hero-stat-label">Happy Families</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" data-target="15" data-suffix=" Yr">0</span>
+      <span class="hero-stat-label">Of Excellence</span>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED APARTMENTS -->
+<section class="featured">
+  <div class="featured-header fade-in">
+    <div>
+      <span class="section-label">Curated Selection</span>
+      <h2 class="section-title">Featured Residences</h2>
+    </div>
+    <a href="properties.html" class="btn-outline">View All Properties</a>
+  </div>
+
+  <div class="featured-grid">
+    <!-- Card 1 — Large -->
+    <div class="apt-card fade-in" style="min-height:560px; position:relative;">
+      <img class="apt-card-img" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" alt="Penthouse" style="position:absolute;inset:0;height:100%;" />
+      <div class="apt-card-overlay"></div>
+      <div class="apt-card-info">
+        <span class="apt-badge">Penthouse</span>
+        <h3 class="apt-name">The Crown Penthouse</h3>
+        <p class="apt-location">📍 Jubilee Hills, Hyderabad</p>
+        <div class="apt-details">
+          <span class="apt-detail"><strong>5 BHK</strong></span>
+          <span class="apt-detail">•</span>
+          <span class="apt-detail"><strong>6,200</strong> sqft</span>
+          <span class="apt-detail">•</span>
+          <span class="apt-detail"><strong>Private Pool</strong></span>
+        </div>
+        <div class="apt-price">₹8.5 Cr</div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="apt-card fade-in" data-delay="100">
+      <img class="apt-card-img" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80" alt="3BHK" />
+      <div class="apt-card-overlay"></div>
+      <div class="apt-card-info">
+        <span class="apt-badge">Signature</span>
+        <h3 class="apt-name">Skyline Residence</h3>
+        <p class="apt-location">📍 Banjara Hills, Hyderabad</p>
+        <div class="apt-details">
+          <span class="apt-detail"><strong>3 BHK</strong></span>
+          <span class="apt-detail">•</span>
+          <span class="apt-detail"><strong>2,800</strong> sqft</span>
+        </div>
+        <div class="apt-price">₹3.2 Cr</div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="apt-card fade-in" data-delay="150">
+      <img class="apt-card-img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80" alt="2BHK" />
+      <div class="apt-card-overlay"></div>
+      <div class="apt-card-info">
+        <span class="apt-badge">Premium</span>
+        <h3 class="apt-name">Garden View Suite</h3>
+        <p class="apt-location">📍 Gachibowli, Hyderabad</p>
+        <div class="apt-details">
+          <span class="apt-detail"><strong>2 BHK</strong></span>
+          <span class="apt-detail">•</span>
+          <span class="apt-detail"><strong>1,650</strong> sqft</span>
+        </div>
+        <div class="apt-price">₹1.8 Cr</div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="apt-card fade-in" data-delay="200">
+      <img class="apt-card-img" src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80" alt="Duplex" />
+      <div class="apt-card-overlay"></div>
+      <div class="apt-card-info">
+        <span class="apt-badge">Limited Edition</span>
+        <h3 class="apt-name">The Amber Duplex</h3>
+        <p class="apt-location">📍 Hitech City, Hyderabad</p>
+        <div class="apt-details">
+          <span class="apt-detail"><strong>4 BHK</strong></span>
+          <span class="apt-detail">•</span>
+          <span class="apt-detail"><strong>4,100</strong> sqft</span>
+        </div>
+        <div class="apt-price">₹5.4 Cr</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFESTYLE -->
+<section class="lifestyle">
+  <div style="text-align:center;" class="fade-in">
+    <span class="section-label">The Elysia Life</span>
+    <h2 class="section-title">Live Without Limits</h2>
+    <p class="section-sub" style="margin:0 auto;">Every amenity thoughtfully crafted to enhance your everyday. From morning swims to rooftop evenings — this is life, elevated.</p>
+  </div>
+
+  <div class="lifestyle-grid">
+    <div class="lifestyle-item fade-in">
+      <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=1400&q=80" alt="Rooftop" />
+      <div class="lifestyle-item-label">Rooftop Terrace</div>
+    </div>
+    <div class="lifestyle-item fade-in" data-delay="80">
+      <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80" alt="Pool" />
+      <div class="lifestyle-item-label">Infinity Pool</div>
+    </div>
+    <div class="lifestyle-item fade-in" data-delay="140">
+      <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80" alt="Gym" />
+      <div class="lifestyle-item-label">Luxury Fitness Club</div>
+    </div>
+    <div class="lifestyle-item fade-in" data-delay="180">
+      <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80" alt="Interior" />
+      <div class="lifestyle-item-label">Designer Interiors</div>
+    </div>
+    <div class="lifestyle-item fade-in" data-delay="220">
+      <img src="https://images.unsplash.com/photo-1549451371-64aa98a6f660?w=800&q=80" alt="Lobby" />
+      <div class="lifestyle-item-label">Grand Lobby</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="why-us">
+  <div class="why-grid">
+    <div class="why-visual fade-in-left">
+      <img class="why-img-main" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=900&q=80" alt="Luxury" />
+      <img class="why-img-accent" src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&q=80" alt="Detail" />
+      <div class="why-badge">
+        <span class="why-badge-num">15</span>
+        <span class="why-badge-text">Years of<br>Excellence</span>
+      </div>
+    </div>
+
+    <div class="fade-in-right">
+      <span class="section-label">Why Elysia</span>
+      <h2 class="section-title">Crafted for the<br><em style="font-style:italic;color:var(--gold2)">Discerning Few</em></h2>
+      <p class="section-sub">We don't just build homes — we engineer lifestyles. Every detail, from the Italian marble to the triple-glazed windows, speaks of an unrelenting pursuit of perfection.</p>
+
+      <div class="why-features">
+        <div class="why-feature fade-in" data-delay="0">
+          <div class="why-feature-icon">🏆</div>
+          <h4>Award-Winning Design</h4>
+          <p>Multiple national awards for architectural excellence and sustainable luxury.</p>
+        </div>
+        <div class="why-feature fade-in" data-delay="80">
+          <div class="why-feature-icon">📍</div>
+          <h4>Prime Locations</h4>
+          <p>Strategically placed in Hyderabad's most coveted neighbourhoods.</p>
+        </div>
+        <div class="why-feature fade-in" data-delay="160">
+          <div class="why-feature-icon">🔐</div>
+          <h4>24/7 Concierge</h4>
+          <p>Dedicated concierge and smart security systems for absolute peace of mind.</p>
+        </div>
+        <div class="why-feature fade-in" data-delay="240">
+          <div class="why-feature-icon">💎</div>
+          <h4>Premium Finishes</h4>
+          <p>Italian marble, Kohler fittings & Modular kitchens as standard, not upgrades.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="cta-banner-content fade-in">
+    <div class="gold-line"></div>
+    <h2>Book Your <em>Private Visit</em></h2>
+    <p>Experience Elysia in person. Our consultants will walk you through every detail, privately.</p>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn-primary">
+        Schedule a Visit
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </a>
+      <a href="tel:+919876543210" class="btn-outline">Call Now: +91 98765 43210</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand fade-in">
+      <div class="logo-name">Elysia</div>
+      <span class="logo-tag">Luxury Residences</span>
+      <p>Crafting extraordinary living spaces for those who accept nothing but the finest. Hyderabad's most trusted luxury developer since 2009.</p>
+      <div class="footer-socials">
+        <a href="#">in</a>
+        <a href="#">ig</a>
+        <a href="#">fb</a>
+        <a href="#">yt</a>
+      </div>
+    </div>
+    <div class="footer-col fade-in" data-delay="80">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col fade-in" data-delay="150">
+      <h5>Properties</h5>
+      <ul>
+        <li><a href="properties.html">2 BHK Apartments</a></li>
+        <li><a href="properties.html">3 BHK Residences</a></li>
+        <li><a href="properties.html">Penthouses</a></li>
+        <li><a href="properties.html">Duplexes</a></li>
+        <li><a href="projects.html">Ongoing Projects</a></li>
+      </ul>
+    </div>
+    <div class="footer-col fade-in" data-delay="220">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        <li><a href="mailto:sales@elysiaresidences.com">sales@elysiaresidences.com</a></li>
+        <li><a href="#">Jubilee Hills, Hyderabad</a></li>
+        <li><a href="#">Telangana, 500033</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elysia Residences Pvt. Ltd. All rights reserved.</span>
+    <span>RERA No: P02400003456 | Privacy Policy | Terms</span>
+  </div>
+</footer>
+
+<!-- CHATBOT -->
+<div class="chatbot-wrapper">
+  <div class="chatbot-panel" id="chatPanel">
+    <div class="chatbot-header">
+      <div class="chatbot-avatar">🏛️</div>
+      <div class="chatbot-info">
+        <h4>Elysia Concierge</h4>
+        <p>Online — Typically replies instantly</p>
+      </div>
+    </div>
+    <div class="chatbot-messages" id="chatMessages">
+      <div class="chat-msg bot">Welcome to Elysia Residences 🏛️ How may I assist you today?</div>
+    </div>
+    <div class="chatbot-options">
+      <button class="chat-option" data-action="view-apartments"><span class="opt-icon">🏢</span> View Apartments</button>
+      <button class="chat-option" data-action="book-visit"><span class="opt-icon">📅</span> Book Site Visit</button>
+      <button class="chat-option" data-action="pricing"><span class="opt-icon">💰</span> Pricing Details</button>
+      <button class="chat-option" data-action="location"><span class="opt-icon">📍</span> Project Location</button>
+      <button class="chat-option" data-action="call"><span class="opt-icon">📞</span> Call Now</button>
+    </div>
+  </div>
+  <button class="chatbot-toggle" id="chatToggle" aria-label="Open chat">
+    <span class="chat-icon">💬</span>
+    <span class="close-icon">✕</span>
+  </button>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  // Hero bg animation trigger
+  window.addEventListener('load', () => {
+    document.getElementById('heroBg').classList.add('loaded');
+  });
+
+  // 3D tilt on apartment cards
+  document.querySelectorAll('.apt-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(800px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) translateZ(10px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) translateZ(0)';
+    });
+  });
+</script>
+</body>
+</html>

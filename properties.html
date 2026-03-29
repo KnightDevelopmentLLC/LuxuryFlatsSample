@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Properties — Elysia Residences</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    /* PAGE HERO */
+    .page-hero {
+      height: 60vh;
+      min-height: 440px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 80px 60px;
+      overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.9) 100%),
+        url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600&q=80') center/cover no-repeat;
+    }
+    .page-hero-content { position: relative; z-index: 1; }
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gray);
+    }
+    .breadcrumb a { color: var(--gold); }
+    .breadcrumb span { color: var(--white2); }
+
+    /* FILTERS */
+    .filters-bar {
+      padding: 40px 60px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+
+    .filter-btn {
+      padding: 9px 22px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--gray);
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: var(--transition);
+      text-transform: uppercase;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--glass2);
+    }
+
+    /* PROPERTIES GRID */
+    .properties-section {
+      padding: 80px 60px 140px;
+    }
+
+    .results-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 50px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .results-count {
+      font-size: 0.75rem;
+      color: var(--gray);
+      letter-spacing: 0.1em;
+    }
+
+    .results-count strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .sort-select {
+      padding: 8px 20px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      color: var(--white2);
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c9a84c'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    /* PROPERTY CARD */
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .prop-card {
+      background: var(--bg2);
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .prop-card[data-type="penthouse"],
+    .prop-card[data-type="luxury"] {
+      /* Featured modifier handled in JS */
+    }
+
+    .prop-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.3);
+      z-index: 2;
+    }
+
+    .prop-img-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prop-img-wrap img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s ease;
+      filter: brightness(0.9);
+    }
+
+    .prop-card:hover .prop-img-wrap img {
+      transform: scale(1.07);
+    }
+
+    .prop-badge {
+      position: absolute;
+      top: 16px; left: 16px;
+      padding: 5px 14px;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .prop-badge.new { background: var(--gold); color: var(--bg); }
+    .prop-badge.premium { background: rgba(0,0,0,0.7); color: var(--gold); border: 1px solid var(--gold); backdrop-filter: blur(10px); }
+    .prop-badge.sold { background: rgba(220,38,38,0.8); color: #fff; }
+    .prop-badge.limited { background: rgba(139,92,246,0.8); color: #fff; }
+
+    .prop-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.6) 0%, transparent 60%);
+    }
+
+    .prop-body {
+      padding: 28px;
+      border: 1px solid var(--border2);
+      border-top: none;
+    }
+
+    .prop-location {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prop-name {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      color: var(--white);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .prop-highlights {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .prop-highlight {
+      padding: 4px 12px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      font-size: 0.6rem;
+      color: var(--white2);
+      letter-spacing: 0.08em;
+    }
+
+    .prop-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 1px solid var(--border2);
+    }
+
+    .prop-price {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+
+    .prop-price small {
+      font-size: 0.7rem;
+      color: var(--gray);
+      font-family: var(--font-sans);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .prop-specs {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .prop-spec {
+      font-size: 0.65rem;
+      color: var(--gray);
+      letter-spacing: 0.08em;
+    }
+
+    .prop-cta {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .prop-btn {
+      flex: 1;
+      padding: 11px 0;
+      text-align: center;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      color: var(--gold);
+      background: transparent;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .prop-btn:hover, .prop-btn.primary {
+      background: var(--gold);
+      color: var(--bg);
+      border-color: var(--gold);
+    }
+
+    /* Hidden card for filtering */
+    .prop-card.hidden {
+      display: none;
+    }
+
+    /* Load more */
+    .load-more-wrap {
+      text-align: center;
+      margin-top: 70px;
+      padding-top: 60px;
+      border-top: 1px solid var(--border2);
+    }
+
+    .load-more-wrap p {
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1200px) {
+      .properties-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 60px 20px; }
+      .filters-bar { padding: 24px 20px; }
+      .properties-section { padding: 50px 20px 80px; }
+      .properties-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-logo">
+    <span class="logo-name">Elysia</span>
+    <span class="logo-tag">Luxury Residences</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="properties.html" class="active">Properties</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="contact.html" class="navbar-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="properties.html">Properties</a>
+  <a href="projects.html">Projects</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content fade-in">
+    <span class="section-label">Exclusive Listings</span>
+    <h1 class="page-hero-title">Our Properties</h1>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span>Properties</span>
+    </div>
+  </div>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <span class="filter-label">Filter By:</span>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="2bhk">2 BHK</button>
+  <button class="filter-btn" data-filter="3bhk">3 BHK</button>
+  <button class="filter-btn" data-filter="4bhk">4 BHK</button>
+  <button class="filter-btn" data-filter="penthouse">Penthouse</button>
+  <button class="filter-btn" data-filter="luxury">Luxury</button>
+</div>
+
+<!-- PROPERTIES -->
+<section class="properties-section">
+  <div class="results-info">
+    <p class="results-count">Showing <strong id="propCount">9</strong> exclusive residences</p>
+    <select class="sort-select">
+      <option>Sort: Featured</option>
+      <option>Price: Low to High</option>
+      <option>Price: High to Low</option>
+      <option>Newest First</option>
+    </select>
+  </div>
+
+  <div class="properties-grid" id="propertiesGrid">
+
+    <!-- 1 -->
+    <div class="prop-card fade-in" data-type="penthouse">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=700&q=80" alt="Crown Penthouse" />
+        <div class="prop-badge premium">Penthouse</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Jubilee Hills, Hyderabad</p>
+        <h3 class="prop-name">The Crown Penthouse</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">5 BHK</span>
+          <span class="prop-highlight">6,200 sqft</span>
+          <span class="prop-highlight">Private Pool</span>
+          <span class="prop-highlight">Sky Lounge</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹8.5 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 28–30</span>
+            <span class="prop-spec">Ready to Move</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="prop-card fade-in" data-delay="80" data-type="3bhk">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=80" alt="Skyline" />
+        <div class="prop-badge new">New Launch</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Banjara Hills, Hyderabad</p>
+        <h3 class="prop-name">Skyline Residence</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">3 BHK</span>
+          <span class="prop-highlight">2,800 sqft</span>
+          <span class="prop-highlight">City View</span>
+          <span class="prop-highlight">3 Balconies</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹3.2 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 12–22</span>
+            <span class="prop-spec">Possession: 2026</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="prop-card fade-in" data-delay="160" data-type="2bhk">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80" alt="Garden View" />
+        <div class="prop-badge new">New Launch</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Gachibowli, Hyderabad</p>
+        <h3 class="prop-name">Garden View Suite</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">2 BHK</span>
+          <span class="prop-highlight">1,650 sqft</span>
+          <span class="prop-highlight">Garden Facing</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹1.8 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 4–15</span>
+            <span class="prop-spec">Possession: 2025</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="prop-card fade-in" data-type="4bhk luxury">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80" alt="Amber Duplex" />
+        <div class="prop-badge limited">Limited Units</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Hitech City, Hyderabad</p>
+        <h3 class="prop-name">The Amber Duplex</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">4 BHK</span>
+          <span class="prop-highlight">4,100 sqft</span>
+          <span class="prop-highlight">Duplex</span>
+          <span class="prop-highlight">Private Deck</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹5.4 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 18–19</span>
+            <span class="prop-spec">Ready to Move</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="prop-card fade-in" data-delay="80" data-type="3bhk luxury">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80" alt="Pearl Tower" />
+        <div class="prop-badge premium">Signature</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Kondapur, Hyderabad</p>
+        <h3 class="prop-name">Pearl Tower Residence</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">3 BHK</span>
+          <span class="prop-highlight">3,200 sqft</span>
+          <span class="prop-highlight">Club Access</span>
+          <span class="prop-highlight">2 Parking</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹4.1 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 10–20</span>
+            <span class="prop-spec">Possession: 2026</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="prop-card fade-in" data-delay="160" data-type="2bhk">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80" alt="Emerald Flat" />
+        <div class="prop-badge new">Best Value</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Madhapur, Hyderabad</p>
+        <h3 class="prop-name">Emerald Apartment</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">2 BHK</span>
+          <span class="prop-highlight">1,420 sqft</span>
+          <span class="prop-highlight">Pool View</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹1.2 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 2–10</span>
+            <span class="prop-spec">Ready to Move</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="prop-card fade-in" data-type="penthouse luxury">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=700&q=80" alt="Sapphire Sky" />
+        <div class="prop-badge limited">2 Units Left</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Jubilee Hills, Hyderabad</p>
+        <h3 class="prop-name">Sapphire Sky Suite</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">4 BHK</span>
+          <span class="prop-highlight">5,000 sqft</span>
+          <span class="prop-highlight">Terrace Garden</span>
+          <span class="prop-highlight">Smart Home</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹7.2 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 25–27</span>
+            <span class="prop-spec">Ready to Move</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="prop-card fade-in" data-delay="80" data-type="4bhk">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=700&q=80" alt="Meridian" />
+        <div class="prop-badge premium">Coming Soon</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Financial District, Hyderabad</p>
+        <h3 class="prop-name">Meridian Heights</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">4 BHK</span>
+          <span class="prop-highlight">3,800 sqft</span>
+          <span class="prop-highlight">Lake View</span>
+          <span class="prop-highlight">EV Parking</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Pre-launch Price</small>
+            ₹4.8 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 15–25</span>
+            <span class="prop-spec">Possession: 2027</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Register Interest</button>
+          <button class="prop-btn">Know More</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="prop-card fade-in" data-delay="160" data-type="3bhk">
+      <div class="prop-img-wrap">
+        <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=700&q=80" alt="Ivory" />
+        <div class="prop-badge new">Ready Possession</div>
+        <div class="prop-img-overlay"></div>
+      </div>
+      <div class="prop-body">
+        <p class="prop-location">📍 Kokapet, Hyderabad</p>
+        <h3 class="prop-name">Ivory Court</h3>
+        <div class="prop-highlights">
+          <span class="prop-highlight">3 BHK</span>
+          <span class="prop-highlight">2,400 sqft</span>
+          <span class="prop-highlight">Golf Course View</span>
+        </div>
+        <div class="prop-footer">
+          <div class="prop-price">
+            <small>Starting from</small>
+            ₹2.9 Cr
+          </div>
+          <div class="prop-specs">
+            <span class="prop-spec">Floor 6–18</span>
+            <span class="prop-spec">Ready to Move</span>
+          </div>
+        </div>
+        <div class="prop-cta">
+          <button class="prop-btn primary">Enquire Now</button>
+          <button class="prop-btn">View Floor Plan</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="load-more-wrap fade-in">
+    <p>Can't find what you're looking for? Our private collection includes off-market properties.</p>
+    <a href="contact.html" class="btn-primary">
+      Speak to a Consultant
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-name">Elysia</div>
+      <span class="logo-tag">Luxury Residences</span>
+      <p>Crafting extraordinary living spaces for those who accept nothing but the finest.</p>
+      <div class="footer-socials">
+        <a href="#">in</a><a href="#">ig</a><a href="#">fb</a><a href="#">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Properties</h5>
+      <ul>
+        <li><a href="#">2 BHK Apartments</a></li>
+        <li><a href="#">3 BHK Residences</a></li>
+        <li><a href="#">Penthouses</a></li>
+        <li><a href="#">Duplexes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        <li><a href="mailto:sales@elysiaresidences.com">sales@elysiaresidences.com</a></li>
+        <li><a href="#">Jubilee Hills, Hyderabad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elysia Residences Pvt. Ltd. All rights reserved.</span>
+    <span>RERA No: P02400003456</span>
+  </div>
+</footer>
+
+<div class="chatbot-wrapper">
+  <div class="chatbot-panel" id="chatPanel">
+    <div class="chatbot-header">
+      <div class="chatbot-avatar">🏛️</div>
+      <div class="chatbot-info">
+        <h4>Elysia Concierge</h4>
+        <p>Online — Typically replies instantly</p>
+      </div>
+    </div>
+    <div class="chatbot-messages" id="chatMessages">
+      <div class="chat-msg bot">Welcome to Elysia Residences 🏛️ How may I assist you today?</div>
+    </div>
+    <div class="chatbot-options">
+      <button class="chat-option" data-action="view-apartments"><span class="opt-icon">🏢</span> View Apartments</button>
+      <button class="chat-option" data-action="book-visit"><span class="opt-icon">📅</span> Book Site Visit</button>
+      <button class="chat-option" data-action="pricing"><span class="opt-icon">💰</span> Pricing Details</button>
+      <button class="chat-option" data-action="location"><span class="opt-icon">📍</span> Project Location</button>
+      <button class="chat-option" data-action="call"><span class="opt-icon">📞</span> Call Now</button>
+    </div>
+  </div>
+  <button class="chatbot-toggle" id="chatToggle">
+    <span class="chat-icon">💬</span>
+    <span class="close-icon">✕</span>
+  </button>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  // Filter functionality
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const propCards = document.querySelectorAll('.prop-card');
+  const propCount = document.getElementById('propCount');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+      let visible = 0;
+
+      propCards.forEach(card => {
+        const types = card.dataset.type || '';
+        if (filter === 'all' || types.includes(filter)) {
+          card.classList.remove('hidden');
+          visible++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      propCount.textContent = visible;
+    });
+  });
+
+  // Hover effect on property cards
+  propCards.forEach(card => {
+    card.addEventListener('click', () => {
+      card.querySelector('.prop-btn.primary')?.focus();
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Elysia Residences</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .page-hero {
+      height: 55vh;
+      min-height: 400px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 80px 60px;
+      overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.9) 100%),
+        url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80') center/cover no-repeat;
+    }
+    .page-hero-content { position: relative; z-index: 1; }
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300; color: var(--white);
+      line-height: 1.05; margin-bottom: 20px;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gray);
+    }
+    .breadcrumb a { color: var(--gold); }
+    .breadcrumb span { color: var(--white2); }
+
+    /* CONTACT SECTION */
+    .contact-section {
+      padding: 120px 60px 140px;
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* INFO SIDE */
+    .contact-info {
+      position: sticky;
+      top: 100px;
+    }
+
+    .contact-info .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 20px;
+    }
+
+    .contact-info .section-sub {
+      margin-bottom: 50px;
+      max-width: 100%;
+    }
+
+    .info-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 40px;
+    }
+
+    .info-card {
+      padding: 24px 28px;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      transition: var(--transition);
+    }
+
+    .info-card:hover {
+      border-color: var(--border);
+      background: var(--glass2);
+    }
+
+    .info-card-icon {
+      width: 44px; height: 44px;
+      background: var(--glass2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .info-card-content h5 {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .info-card-content p {
+      font-size: 0.75rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .info-card-content a {
+      color: var(--gold);
+      transition: var(--transition);
+    }
+
+    .info-card-content a:hover { color: var(--gold2); }
+
+    .whatsapp-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 28px;
+      background: linear-gradient(135deg, #128c7e, #25d366);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .whatsapp-btn:hover {
+      background: linear-gradient(135deg, #075e54, #128c7e);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(37,211,102,0.3);
+    }
+
+    .whatsapp-btn svg {
+      width: 22px; height: 22px;
+      flex-shrink: 0;
+    }
+
+    .office-hours {
+      margin-top: 30px;
+      padding: 24px 28px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+    }
+
+    .office-hours h5 {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border2);
+      color: var(--gray);
+    }
+
+    .hours-row:last-child { border: none; padding-bottom: 0; }
+    .hours-row strong { color: var(--white2); }
+
+    /* FORM SIDE */
+    .contact-form-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-form-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle at top right, rgba(201,168,76,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .form-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .form-sub {
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-bottom: 40px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 8px;
+      transition: var(--transition);
+    }
+
+    .form-group:focus-within label {
+      color: var(--gold);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 300;
+      outline: none;
+      transition: var(--transition);
+      -webkit-appearance: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.04);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+    }
+
+    .form-control::placeholder {
+      color: rgba(138,132,120,0.6);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 130px;
+    }
+
+    select.form-control {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c9a84c'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .form-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .form-consent input {
+      width: 16px; height: 16px;
+      margin-top: 2px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .form-consent label {
+      font-size: 0.7rem;
+      color: var(--gray);
+      line-height: 1.6;
+      cursor: pointer;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 18px;
+      background: var(--gold);
+      color: var(--bg);
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .form-submit::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.15);
+      transition: left 0.4s ease;
+    }
+
+    .form-submit:hover {
+      background: var(--gold2);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(201,168,76,0.4);
+    }
+
+    .form-submit:hover::before { left: 100%; }
+
+    .form-submit.submitted {
+      background: #10b981;
+      pointer-events: none;
+    }
+
+    .form-note {
+      font-size: 0.65rem;
+      color: var(--gray);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    /* MAP SECTION */
+    .map-section {
+      padding: 0 0 120px;
+    }
+
+    .map-header {
+      padding: 60px 60px 40px;
+      text-align: center;
+    }
+
+    .map-container {
+      height: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      filter: grayscale(0.8) brightness(0.7) contrast(1.1);
+      transition: filter 0.5s ease;
+    }
+
+    .map-container:hover iframe {
+      filter: grayscale(0.3) brightness(0.85);
+    }
+
+    .map-overlay-card {
+      position: absolute;
+      top: 40px; left: 60px;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      max-width: 280px;
+    }
+
+    .map-overlay-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .map-overlay-card p {
+      font-size: 0.72rem;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .map-get-directions {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* SUCCESS MSG */
+    .success-message {
+      display: none;
+      padding: 20px;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: #10b981;
+      font-size: 0.8rem;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .success-message.show { display: block; }
+
+    @media (max-width: 1024px) {
+      .contact-section { grid-template-columns: 1fr; gap: 50px; padding: 80px 30px 100px; }
+      .contact-info { position: relative; top: 0; }
+      .contact-form-wrap { padding: 40px 30px; }
+      .map-section { padding: 0 0 80px; }
+      .map-header { padding: 40px 30px 30px; }
+      .map-container { height: 400px; }
+      .map-overlay-card { left: 20px; top: 20px; }
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 60px 20px; }
+      .contact-section { padding: 60px 20px 80px; }
+      .form-row { grid-template-columns: 1fr; }
+      .contact-form-wrap { padding: 30px 20px; }
+      .map-header { padding: 30px 20px 20px; }
+      .map-container { height: 350px; }
+      .map-overlay-card { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-logo">
+    <span class="logo-name">Elysia</span>
+    <span class="logo-tag">Luxury Residences</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="properties.html">Properties</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="contact.html" class="active navbar-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="properties.html">Properties</a>
+  <a href="projects.html">Projects</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content fade-in">
+    <span class="section-label">Connect With Us</span>
+    <h1 class="page-hero-title">Let's Begin Your<br><em style="font-style:italic;color:var(--gold2)">Journey Home</em></h1>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span>Contact</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="contact-section">
+
+  <!-- INFO -->
+  <div class="contact-info">
+    <span class="section-label fade-in">Reach Out</span>
+    <h2 class="section-title fade-in">Speak to Our<br><em style="font-style:italic;color:var(--gold2)">Experts</em></h2>
+    <p class="section-sub fade-in">Our concierge team is ready to guide you through every step of your journey — from first inquiry to handing over the keys to your dream home.</p>
+
+    <div class="info-cards fade-in">
+      <div class="info-card">
+        <div class="info-card-icon">📞</div>
+        <div class="info-card-content">
+          <h5>Call Us Directly</h5>
+          <p><a href="tel:+919876543210">+91 98765 43210</a><br>
+          <a href="tel:+914023456789">+91 40 2345 6789</a></p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">✉️</div>
+        <div class="info-card-content">
+          <h5>Email Us</h5>
+          <p><a href="mailto:sales@elysiaresidences.com">sales@elysiaresidences.com</a><br>
+          <a href="mailto:info@elysiaresidences.com">info@elysiaresidences.com</a></p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📍</div>
+        <div class="info-card-content">
+          <h5>Visit Our Office</h5>
+          <p>Elysia Experience Centre,<br>Road No. 36, Jubilee Hills,<br>Hyderabad — 500033</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="https://wa.me/919876543210?text=Hi,%20I%27m%20interested%20in%20booking%20a%20site%20visit%20for%20Elysia%20Residences" class="whatsapp-btn" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Book Site Visit on WhatsApp
+    </a>
+
+    <div class="office-hours fade-in">
+      <h5>Office Hours</h5>
+      <div class="hours-row"><strong>Mon – Fri</strong><span>9:00 AM – 7:00 PM</span></div>
+      <div class="hours-row"><strong>Saturday</strong><span>10:00 AM – 6:00 PM</span></div>
+      <div class="hours-row"><strong>Sunday</strong><span>11:00 AM – 4:00 PM</span></div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="contact-form-wrap fade-in-right">
+    <h3 class="form-title">Send an Enquiry</h3>
+    <p class="form-sub">Fill in your details and a dedicated advisor will reach you within 2 hours.</p>
+
+    <form id="contactForm" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input type="text" id="firstName" class="form-control" placeholder="Rajesh" required />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" class="form-control" placeholder="Kumar" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" class="form-control" placeholder="+91 98765 43210" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" class="form-control" placeholder="rajesh@example.com" />
+      </div>
+
+      <div class="form-group">
+        <label for="interest">I'm Interested In</label>
+        <select id="interest" class="form-control">
+          <option value="">— Select Property Type —</option>
+          <option>2 BHK Apartment</option>
+          <option>3 BHK Apartment</option>
+          <option>4 BHK Apartment</option>
+          <option>Penthouse</option>
+          <option>Not decided yet</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="budget">Budget Range</label>
+        <select id="budget" class="form-control">
+          <option value="">— Select Budget —</option>
+          <option>₹1 Cr – ₹2 Cr</option>
+          <option>₹2 Cr – ₹4 Cr</option>
+          <option>₹4 Cr – ₹6 Cr</option>
+          <option>₹6 Cr – ₹10 Cr</option>
+          <option>₹10 Cr+</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" class="form-control" placeholder="Tell us about your dream home — location preferences, must-have features, timeline..."></textarea>
+      </div>
+
+      <div class="form-consent">
+        <input type="checkbox" id="consent" required />
+        <label for="consent">I agree to be contacted by Elysia Residences via phone, email or WhatsApp regarding properties and site visits. I confirm I am above 18 years of age.</label>
+      </div>
+
+      <button type="submit" class="form-submit" id="submitBtn">
+        Submit Enquiry — We'll Call You Back
+      </button>
+
+      <p class="form-note">🔒 Your information is 100% secure. We never share your data.</p>
+    </form>
+
+    <div class="success-message" id="successMsg">
+      ✓ Thank you! Your enquiry has been received. Our advisor will contact you within 2 hours.
+    </div>
+  </div>
+
+</section>
+
+<!-- MAP -->
+<section class="map-section">
+  <div class="map-header fade-in">
+    <span class="section-label">Find Us</span>
+    <h2 class="section-title">Experience Centre</h2>
+  </div>
+
+  <div class="map-container fade-in">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.2734!2d78.4040!3d17.4326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb97e48789e4f5%3A0x4a7c19bad5ebef16!2sJubilee+Hills%2C+Hyderabad%2C+Telangana!5e0!3m2!1sen!2sin!4v1700000000000"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="Elysia Residences Location">
+    </iframe>
+    <div class="map-overlay-card">
+      <h4>Elysia Experience Centre</h4>
+      <p>Road No. 36, Jubilee Hills<br>Hyderabad, Telangana 500033</p>
+      <a href="https://maps.google.com" target="_blank" class="map-get-directions">
+        Get Directions
+        <svg width="12" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-name">Elysia</div>
+      <span class="logo-tag">Luxury Residences</span>
+      <p>Crafting extraordinary living spaces for those who accept nothing but the finest.</p>
+      <div class="footer-socials">
+        <a href="#">in</a><a href="#">ig</a><a href="#">fb</a><a href="#">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Properties</h5>
+      <ul>
+        <li><a href="properties.html">2 BHK Apartments</a></li>
+        <li><a href="properties.html">3 BHK Residences</a></li>
+        <li><a href="properties.html">Penthouses</a></li>
+        <li><a href="properties.html">Duplexes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        <li><a href="mailto:sales@elysiaresidences.com">sales@elysiaresidences.com</a></li>
+        <li><a href="#">Jubilee Hills, Hyderabad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elysia Residences Pvt. Ltd. All rights reserved.</span>
+    <span>RERA No: P02400003456</span>
+  </div>
+</footer>
+
+<div class="chatbot-wrapper">
+  <div class="chatbot-panel" id="chatPanel">
+    <div class="chatbot-header">
+      <div class="chatbot-avatar">🏛️</div>
+      <div class="chatbot-info">
+        <h4>Elysia Concierge</h4>
+        <p>Online — Typically replies instantly</p>
+      </div>
+    </div>
+    <div class="chatbot-messages" id="chatMessages">
+      <div class="chat-msg bot">Welcome to Elysia Residences 🏛️ How may I assist you today?</div>
+    </div>
+    <div class="chatbot-options">
+      <button class="chat-option" data-action="view-apartments"><span class="opt-icon">🏢</span> View Apartments</button>
+      <button class="chat-option" data-action="book-visit"><span class="opt-icon">📅</span> Book Site Visit</button>
+      <button class="chat-option" data-action="pricing"><span class="opt-icon">💰</span> Pricing Details</button>
+      <button class="chat-option" data-action="location"><span class="opt-icon">📍</span> Project Location</button>
+      <button class="chat-option" data-action="call"><span class="opt-icon">📞</span> Call Now</button>
+    </div>
+  </div>
+  <button class="chatbot-toggle" id="chatToggle">
+    <span class="chat-icon">💬</span>
+    <span class="close-icon">✕</span>
+  </button>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  // Form submission
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const successMsg = document.getElementById('successMsg');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const firstName = document.getElementById('firstName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const consent = document.getElementById('consent').checked;
+
+    if (!firstName) {
+      document.getElementById('firstName').focus();
+      document.getElementById('firstName').style.borderColor = '#ef4444';
+      setTimeout(() => document.getElementById('firstName').style.borderColor = '', 2000);
+      return;
+    }
+
+    if (!phone) {
+      document.getElementById('phone').focus();
+      document.getElementById('phone').style.borderColor = '#ef4444';
+      setTimeout(() => document.getElementById('phone').style.borderColor = '', 2000);
+      return;
+    }
+
+    if (!consent) {
+      document.getElementById('consent').style.outline = '2px solid #ef4444';
+      setTimeout(() => document.getElementById('consent').style.outline = '', 2000);
+      return;
+    }
+
+    submitBtn.textContent = 'Submitting…';
+    submitBtn.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      submitBtn.textContent = '✓ Enquiry Received!';
+      submitBtn.classList.add('submitted');
+      successMsg.classList.add('show');
+      form.reset();
+
+      setTimeout(() => {
+        submitBtn.textContent = 'Submit Enquiry — We\'ll Call You Back';
+        submitBtn.classList.remove('submitted');
+        submitBtn.style.pointerEvents = '';
+        successMsg.classList.remove('show');
+      }, 6000);
+    }, 1200);
+  });
+
+  // Input focus animation
+  document.querySelectorAll('.form-control').forEach(input => {
+    input.addEventListener('focus', () => {
+      input.closest('.form-group')?.classList.add('focused');
+    });
+    input.addEventListener('blur', () => {
+      input.closest('.form-group')?.classList.remove('focused');
+    });
+  });
+</script>
+</body>
+</html>

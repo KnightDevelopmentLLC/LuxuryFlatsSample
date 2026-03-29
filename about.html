@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Elysia Residences</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    /* PAGE HERO */
+    .page-hero {
+      height: 65vh;
+      min-height: 480px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 80px 60px;
+      overflow: hidden;
+    }
+
+    .page-hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.85) 100%),
+        url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80') center/cover no-repeat;
+    }
+
+    .page-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-hero-content .section-label { margin-bottom: 12px; }
+
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--gray);
+    }
+
+    .breadcrumb a { color: var(--gold); }
+    .breadcrumb span { color: var(--white2); }
+
+    /* STORY SECTION */
+    .story {
+      padding: 140px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+
+    .story-visual {
+      position: relative;
+    }
+
+    .story-img-main {
+      width: 100%;
+      height: 600px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9);
+    }
+
+    .story-img-secondary {
+      position: absolute;
+      bottom: -50px; right: -40px;
+      width: 55%;
+      height: 260px;
+      object-fit: cover;
+      border: 5px solid var(--bg);
+      box-shadow: var(--shadow);
+    }
+
+    .story-year {
+      position: absolute;
+      top: 50px; left: -50px;
+      width: 100px; height: 100px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+    }
+
+    .story-year-num {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .story-year-label {
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .story-text { padding-top: 20px; }
+
+    .story-quote {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-style: italic;
+      color: var(--white);
+      border-left: 2px solid var(--gold);
+      padding-left: 24px;
+      margin: 36px 0;
+      line-height: 1.5;
+    }
+
+    .story-signature {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .story-signature img {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+    }
+
+    .story-signature-name {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--white);
+      display: block;
+    }
+
+    .story-signature-title {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* VISION */
+    .vision {
+      padding: 140px 60px;
+      background: var(--bg2);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vision::before {
+      content: 'VISION';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-size: clamp(6rem, 18vw, 18rem);
+      font-weight: 700;
+      color: rgba(201,168,76,0.03);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: 0.1em;
+    }
+
+    .vision-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .vision-statement {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.4;
+      margin: 40px 0;
+    }
+
+    .vision-statement strong {
+      color: var(--gold2);
+      font-weight: 400;
+    }
+
+    .vision-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 80px;
+    }
+
+    .vision-pillar {
+      padding: 50px 30px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      transition: var(--transition);
+    }
+
+    .vision-pillar:hover {
+      background: var(--glass2);
+      border-color: var(--border);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .pillar-num {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      color: var(--gold);
+      opacity: 0.4;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .pillar-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .pillar-text {
+      font-size: 0.78rem;
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    /* STATS */
+    .stats-section {
+      padding: 120px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1519974719765-e6559eac2575?w=1600&q=80') center/cover;
+      opacity: 0.06;
+      filter: grayscale(1);
+    }
+
+    .stats-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .stat-card {
+      padding: 60px 40px;
+      text-align: center;
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border2);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      background: rgba(10,10,10,0.8);
+      border-color: var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gray);
+      display: block;
+    }
+
+    /* TEAM */
+    .team {
+      padding: 140px 60px;
+      background: var(--bg2);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 80px;
+    }
+
+    .team-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .team-card img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      filter: brightness(0.7) grayscale(0.3);
+      transition: transform 0.7s ease, filter 0.5s ease;
+      display: block;
+    }
+
+    .team-card:hover img {
+      transform: scale(1.04);
+      filter: brightness(0.6) grayscale(0);
+    }
+
+    .team-card-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 40px 30px 30px;
+      background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, transparent 100%);
+    }
+
+    .team-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .team-role {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .page-hero { padding: 60px 30px; }
+      .story { grid-template-columns: 1fr; gap: 60px; padding: 100px 30px; }
+      .story-visual { display: none; }
+      .vision { padding: 100px 30px; }
+      .vision-pillars { grid-template-columns: 1fr; }
+      .stats-section { padding: 80px 30px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .team { padding: 100px 30px; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 60px 20px; }
+      .story { padding: 80px 20px; }
+      .vision { padding: 80px 20px; }
+      .stats-section { padding: 60px 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 1px; }
+      .team { padding: 80px 20px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .team-card img { height: 340px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-logo">
+    <span class="logo-name">Elysia</span>
+    <span class="logo-tag">Luxury Residences</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="properties.html">Properties</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="contact.html" class="navbar-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="properties.html">Properties</a>
+  <a href="projects.html">Projects</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content fade-in">
+    <span class="section-label">Our Story</span>
+    <h1 class="page-hero-title">15 Years of<br>Crafting Legacies</h1>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span>About</span>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story">
+  <div class="story-visual fade-in-left">
+    <img class="story-img-main" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=900&q=80" alt="HQ" />
+    <img class="story-img-secondary" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&q=80" alt="Office" />
+    <div class="story-year">
+      <span class="story-year-num">2009</span>
+      <span class="story-year-label">Founded</span>
+    </div>
+  </div>
+
+  <div class="story-text fade-in-right">
+    <span class="section-label">Who We Are</span>
+    <h2 class="section-title">Redefining<br><em style="font-style:italic;color:var(--gold2)">Luxury Living</em></h2>
+
+    <p style="margin-top:24px;">Elysia Residences was born from a single, unwavering conviction — that a home is not merely a structure, but a lived experience. Founded in 2009 by Arvind Mehta, a visionary architect turned developer, we have spent 15 years transforming Hyderabad's skyline one extraordinary residence at a time.</p>
+
+    <div class="story-quote">"We build for people who understand that true luxury lies not in excess, but in the perfect detail."</div>
+
+    <p>From our very first project in Jubilee Hills to our current portfolio spanning Hyderabad's most sought-after addresses, every Elysia home carries our signature promise: uncompromising quality, thoughtful design, and a lifestyle that rewards the senses.</p>
+
+    <div class="story-signature">
+      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80" alt="Founder" />
+      <div>
+        <span class="story-signature-name">Arvind Mehta</span>
+        <span class="story-signature-title">Founder & Chairman, Elysia Residences</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section class="vision">
+  <div class="vision-content">
+    <span class="section-label fade-in">Our Vision</span>
+    <div class="gold-line fade-in"></div>
+    <p class="vision-statement fade-in">
+      To be India's most <strong>trusted luxury developer</strong>, creating homes that are as much a testament to <strong>the art of living</strong> as they are to architectural innovation.
+    </p>
+
+    <div class="vision-pillars">
+      <div class="vision-pillar fade-in">
+        <span class="pillar-num">01</span>
+        <h3 class="pillar-title">Excellence</h3>
+        <p class="pillar-text">Every material is handpicked. Every joint is scrutinised. We settle for nothing less than architectural perfection.</p>
+      </div>
+      <div class="vision-pillar fade-in" data-delay="100">
+        <span class="pillar-num">02</span>
+        <h3 class="pillar-title">Integrity</h3>
+        <p class="pillar-text">On-time delivery, transparent pricing, and zero compromise on what we promise. Our reputation is our most prized possession.</p>
+      </div>
+      <div class="vision-pillar fade-in" data-delay="200">
+        <span class="pillar-num">03</span>
+        <h3 class="pillar-title">Legacy</h3>
+        <p class="pillar-text">We build homes that will be passed down through generations — timeless in design, enduring in quality.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card fade-in">
+      <span class="stat-num" data-target="12" data-suffix="+">0+</span>
+      <span class="stat-label">Projects Delivered</span>
+    </div>
+    <div class="stat-card fade-in" data-delay="80">
+      <span class="stat-num" data-target="850" data-suffix="+">0+</span>
+      <span class="stat-label">Satisfied Clients</span>
+    </div>
+    <div class="stat-card fade-in" data-delay="160">
+      <span class="stat-num" data-target="15" data-suffix=" Yr">0</span>
+      <span class="stat-label">Years of Excellence</span>
+    </div>
+    <div class="stat-card fade-in" data-delay="240">
+      <span class="stat-num" data-target="98" data-suffix="%">0%</span>
+      <span class="stat-label">On-Time Delivery</span>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team">
+  <div style="text-align:center;" class="fade-in">
+    <span class="section-label">The People Behind Elysia</span>
+    <h2 class="section-title">Leadership Team</h2>
+    <p class="section-sub" style="margin:0 auto;">Visionaries, architects, and innovators who breathe life into every project we undertake.</p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card fade-in">
+      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80" alt="Arvind Mehta" />
+      <div class="team-card-overlay">
+        <h3 class="team-name">Arvind Mehta</h3>
+        <span class="team-role">Founder & Chairman</span>
+      </div>
+    </div>
+    <div class="team-card fade-in" data-delay="100">
+      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80" alt="Priya Kapoor" />
+      <div class="team-card-overlay">
+        <h3 class="team-name">Priya Kapoor</h3>
+        <span class="team-role">Chief Design Officer</span>
+      </div>
+    </div>
+    <div class="team-card fade-in" data-delay="200">
+      <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=80" alt="Rohit Sharma" />
+      <div class="team-card-overlay">
+        <h3 class="team-name">Rohit Sharma</h3>
+        <span class="team-role">Head of Construction</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-name">Elysia</div>
+      <span class="logo-tag">Luxury Residences</span>
+      <p>Crafting extraordinary living spaces for those who accept nothing but the finest.</p>
+      <div class="footer-socials">
+        <a href="#">in</a><a href="#">ig</a><a href="#">fb</a><a href="#">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Properties</h5>
+      <ul>
+        <li><a href="properties.html">2 BHK Apartments</a></li>
+        <li><a href="properties.html">3 BHK Residences</a></li>
+        <li><a href="properties.html">Penthouses</a></li>
+        <li><a href="properties.html">Duplexes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        <li><a href="mailto:sales@elysiaresidences.com">sales@elysiaresidences.com</a></li>
+        <li><a href="#">Jubilee Hills, Hyderabad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elysia Residences Pvt. Ltd. All rights reserved.</span>
+    <span>RERA No: P02400003456</span>
+  </div>
+</footer>
+
+<div class="chatbot-wrapper">
+  <div class="chatbot-panel" id="chatPanel">
+    <div class="chatbot-header">
+      <div class="chatbot-avatar">🏛️</div>
+      <div class="chatbot-info">
+        <h4>Elysia Concierge</h4>
+        <p>Online — Typically replies instantly</p>
+      </div>
+    </div>
+    <div class="chatbot-messages" id="chatMessages">
+      <div class="chat-msg bot">Welcome to Elysia Residences 🏛️ How may I assist you today?</div>
+    </div>
+    <div class="chatbot-options">
+      <button class="chat-option" data-action="view-apartments"><span class="opt-icon">🏢</span> View Apartments</button>
+      <button class="chat-option" data-action="book-visit"><span class="opt-icon">📅</span> Book Site Visit</button>
+      <button class="chat-option" data-action="pricing"><span class="opt-icon">💰</span> Pricing Details</button>
+      <button class="chat-option" data-action="location"><span class="opt-icon">📍</span> Project Location</button>
+      <button class="chat-option" data-action="call"><span class="opt-icon">📞</span> Call Now</button>
+    </div>
+  </div>
+  <button class="chatbot-toggle" id="chatToggle" aria-label="Open chat">
+    <span class="chat-icon">💬</span>
+    <span class="close-icon">✕</span>
+  </button>
+</div>
+
+<script src="shared.js"></script>
+</body>
+</html>

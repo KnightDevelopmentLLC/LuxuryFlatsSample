@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — Elysia Residences</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .page-hero {
+      height: 60vh;
+      min-height: 440px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 80px 60px;
+      overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.88) 100%),
+        url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80') center/cover no-repeat;
+    }
+    .page-hero-content { position: relative; z-index: 1; }
+    .page-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300; color: var(--white);
+      line-height: 1.05; margin-bottom: 20px;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gray);
+    }
+    .breadcrumb a { color: var(--gold); }
+    .breadcrumb span { color: var(--white2); }
+
+    /* TAB SWITCHER */
+    .projects-tabs {
+      padding: 50px 60px 0;
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      border-bottom: 1px solid var(--border2);
+      position: sticky;
+      top: var(--nav-h);
+      background: var(--bg);
+      z-index: 50;
+    }
+
+    .tab-btn {
+      padding: 20px 40px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--gray);
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      bottom: -1px;
+    }
+
+    .tab-btn:hover { color: var(--white2); }
+    .tab-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    /* PROJECTS LIST */
+    .projects-content {
+      padding: 80px 60px 140px;
+    }
+
+    .projects-tab-pane { display: none; }
+    .projects-tab-pane.active { display: block; }
+
+    /* LARGE PROJECT CARD */
+    .project-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-bottom: 3px;
+      overflow: hidden;
+      min-height: 540px;
+      transition: var(--transition);
+    }
+
+    .project-item:nth-child(even) { direction: rtl; }
+    .project-item:nth-child(even) > * { direction: ltr; }
+
+    .project-img {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.8s ease;
+      filter: brightness(0.85);
+    }
+
+    .project-item:hover .project-img img {
+      transform: scale(1.04);
+      filter: brightness(0.75);
+    }
+
+    .project-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(10,10,10,0.2) 0%, transparent 60%);
+    }
+
+    .project-status-badge {
+      position: absolute;
+      top: 30px; left: 30px;
+      padding: 8px 20px;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    .project-status-badge.ongoing {
+      background: rgba(234,179,8,0.9);
+      color: #000;
+    }
+
+    .project-status-badge.completed {
+      background: rgba(16,185,129,0.9);
+      color: #fff;
+    }
+
+    .project-body {
+      padding: 70px 60px;
+      background: var(--bg2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      border: 1px solid var(--border2);
+    }
+
+    .project-body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--gold);
+      transition: height 0.6s ease;
+    }
+
+    .project-item:hover .project-body::before { height: 100%; }
+
+    .project-year {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .project-name {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .project-location {
+      font-size: 0.72rem;
+      color: var(--gray);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .project-location::before {
+      content: '—';
+      color: var(--gold);
+      font-size: 0.8rem;
+    }
+
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--white2);
+      line-height: 1.9;
+      margin-bottom: 36px;
+      max-width: 440px;
+    }
+
+    .project-specs-row {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 40px;
+      padding: 24px 0;
+      border-top: 1px solid var(--border2);
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .project-spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .project-spec-val {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+
+    .project-spec-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .project-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* PROGRESS BAR (for ongoing) */
+    .progress-wrap {
+      margin-bottom: 28px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .progress-pct {
+      font-size: 0.7rem;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      position: absolute;
+      left: 0; top: 0; height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      transition: width 1.5s cubic-bezier(0.25,0.46,0.45,0.94) 0.3s;
+      width: 0;
+    }
+
+    .progress-fill.animated { width: var(--progress); }
+
+    /* TIMELINE (completed) */
+    .timeline {
+      position: relative;
+      padding: 60px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border2);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 0;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .timeline-content {
+      padding: 30px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+    }
+
+    .timeline-item:nth-child(even) .timeline-content:first-child { display: none; }
+    .timeline-item:nth-child(odd) .timeline-content:last-child { display: none; }
+
+    .timeline-dot {
+      width: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timeline-dot-inner {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201,168,76,0.2);
+    }
+
+    .timeline-year {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .timeline-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .timeline-text {
+      font-size: 0.75rem;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .page-hero, .projects-tabs { padding-left: 30px; padding-right: 30px; }
+      .projects-content { padding: 60px 30px 100px; }
+      .project-item { grid-template-columns: 1fr; min-height: auto; }
+      .project-item:nth-child(even) { direction: ltr; }
+      .project-img img { height: 360px; }
+      .project-body { padding: 40px 30px; }
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 60px 20px; }
+      .projects-tabs { padding: 0 20px; overflow-x: auto; gap: 0; }
+      .tab-btn { padding: 16px 24px; white-space: nowrap; }
+      .projects-content { padding: 40px 20px 80px; }
+      .project-body { padding: 30px 20px; }
+      .project-specs-row { gap: 20px; flex-wrap: wrap; }
+      .timeline::before { left: 20px; }
+      .timeline-item { grid-template-columns: 40px 1fr; }
+      .timeline-item:nth-child(even) .timeline-content:first-child { display: none; }
+      .timeline-item:nth-child(odd) .timeline-content:last-child { display: block; }
+      .timeline-item .timeline-content:first-child { display: none; }
+      .timeline-item .timeline-content:last-child { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-logo">
+    <span class="logo-name">Elysia</span>
+    <span class="logo-tag">Luxury Residences</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="properties.html">Properties</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="contact.html" class="navbar-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="properties.html">Properties</a>
+  <a href="projects.html">Projects</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content fade-in">
+    <span class="section-label">Our Portfolio</span>
+    <h1 class="page-hero-title">Landmark Projects</h1>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span>Projects</span>
+    </div>
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="projects-tabs">
+  <button class="tab-btn active" data-tab="ongoing">Ongoing Projects</button>
+  <button class="tab-btn" data-tab="completed">Completed Projects</button>
+</div>
+
+<section class="projects-content">
+
+  <!-- ONGOING -->
+  <div class="projects-tab-pane active" id="tab-ongoing">
+
+    <div class="project-item fade-in">
+      <div class="project-img">
+        <img src="https://images.unsplash.com/photo-1601918774946-25832a4be0d6?w=900&q=80" alt="Elysia Heights" />
+        <div class="project-img-overlay"></div>
+        <div class="project-status-badge ongoing">● Ongoing</div>
+      </div>
+      <div class="project-body">
+        <span class="project-year">Launching 2025</span>
+        <h2 class="project-name">Elysia Heights</h2>
+        <p class="project-location">Jubilee Hills, Hyderabad</p>
+        <p class="project-desc">Our most ambitious project to date — a 32-floor glass tower housing 180 ultra-luxury apartments, a rooftop observatory lounge, and a private members' wellness club.</p>
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <span class="progress-label">Construction Progress</span>
+            <span class="progress-pct">68%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="--progress: 68%"></div>
+          </div>
+        </div>
+        <div class="project-specs-row">
+          <div class="project-spec-item">
+            <span class="project-spec-val">32</span>
+            <span class="project-spec-label">Floors</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">180</span>
+            <span class="project-spec-label">Units</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">2026</span>
+            <span class="project-spec-label">Possession</span>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a href="contact.html" class="btn-primary">Register Interest</a>
+          <a href="properties.html" class="btn-outline">View Units</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item fade-in">
+      <div class="project-img">
+        <img src="https://images.unsplash.com/photo-1560184897-ae75f418493e?w=900&q=80" alt="Meridian One" />
+        <div class="project-img-overlay"></div>
+        <div class="project-status-badge ongoing">● Ongoing</div>
+      </div>
+      <div class="project-body">
+        <span class="project-year">Pre-launch 2025</span>
+        <h2 class="project-name">Meridian One</h2>
+        <p class="project-location">Financial District, Hyderabad</p>
+        <p class="project-desc">Twin towers rising 28 floors above the Financial District, Meridian One offers unobstructed lake views, smart home technology, and exclusive EV-ready parking infrastructure.</p>
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <span class="progress-label">Construction Progress</span>
+            <span class="progress-pct">35%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="--progress: 35%"></div>
+          </div>
+        </div>
+        <div class="project-specs-row">
+          <div class="project-spec-item">
+            <span class="project-spec-val">28</span>
+            <span class="project-spec-label">Floors</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">240</span>
+            <span class="project-spec-label">Units</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">2027</span>
+            <span class="project-spec-label">Possession</span>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a href="contact.html" class="btn-primary">Register Interest</a>
+          <a href="properties.html" class="btn-outline">View Units</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item fade-in">
+      <div class="project-img">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80" alt="The Enclave" />
+        <div class="project-img-overlay"></div>
+        <div class="project-status-badge ongoing">● Ongoing</div>
+      </div>
+      <div class="project-body">
+        <span class="project-year">Launching Q3 2025</span>
+        <h2 class="project-name">The Enclave</h2>
+        <p class="project-location">Kokapet, Hyderabad</p>
+        <p class="project-desc">An exclusive gated community of 96 ultra-premium residences spread across a lush 4-acre landscape. A rare combination of space, greenery, and uncompromising luxury.</p>
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <span class="progress-label">Construction Progress</span>
+            <span class="progress-pct">18%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="--progress: 18%"></div>
+          </div>
+        </div>
+        <div class="project-specs-row">
+          <div class="project-spec-item">
+            <span class="project-spec-val">G+18</span>
+            <span class="project-spec-label">Floors</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">96</span>
+            <span class="project-spec-label">Units</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">2028</span>
+            <span class="project-spec-label">Possession</span>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a href="contact.html" class="btn-primary">Register Interest</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COMPLETED -->
+  <div class="projects-tab-pane" id="tab-completed">
+
+    <div class="project-item fade-in">
+      <div class="project-img">
+        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=900&q=80" alt="Elysia Grande" />
+        <div class="project-img-overlay"></div>
+        <div class="project-status-badge completed">✓ Completed</div>
+      </div>
+      <div class="project-body">
+        <span class="project-year">Delivered 2023</span>
+        <h2 class="project-name">Elysia Grande</h2>
+        <p class="project-location">Banjara Hills, Hyderabad</p>
+        <p class="project-desc">The flagship project that redefined luxury in Hyderabad. 24 floors, 150 apartments, and a full-floor sky club that became the most coveted address in the city.</p>
+        <div class="project-specs-row">
+          <div class="project-spec-item">
+            <span class="project-spec-val">24</span>
+            <span class="project-spec-label">Floors</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">150</span>
+            <span class="project-spec-label">Units</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">100%</span>
+            <span class="project-spec-label">Sold Out</span>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a href="contact.html" class="btn-primary">Book a Resale Unit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item fade-in">
+      <div class="project-img">
+        <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=900&q=80" alt="Sapphire Court" />
+        <div class="project-img-overlay"></div>
+        <div class="project-status-badge completed">✓ Completed</div>
+      </div>
+      <div class="project-body">
+        <span class="project-year">Delivered 2021</span>
+        <h2 class="project-name">Sapphire Court</h2>
+        <p class="project-location">Gachibowli, Hyderabad</p>
+        <p class="project-desc">A serene mid-rise community featuring 120 premium residences surrounded by curated gardens, private cabanas, and a world-class fitness centre. IGBC Gold certified.</p>
+        <div class="project-specs-row">
+          <div class="project-spec-item">
+            <span class="project-spec-val">G+15</span>
+            <span class="project-spec-label">Floors</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">120</span>
+            <span class="project-spec-label">Units</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">2021</span>
+            <span class="project-spec-label">Delivered</span>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a href="contact.html" class="btn-primary">Enquire About Resale</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item fade-in">
+      <div class="project-img">
+        <img src="https://images.unsplash.com/photo-1567360425618-1594206637d2?w=900&q=80" alt="Ivory Towers" />
+        <div class="project-img-overlay"></div>
+        <div class="project-status-badge completed">✓ Completed</div>
+      </div>
+      <div class="project-body">
+        <span class="project-year">Delivered 2019</span>
+        <h2 class="project-name">Ivory Towers</h2>
+        <p class="project-location">Kondapur, Hyderabad</p>
+        <p class="project-desc">Our first foray into the premium segment — a 12-floor boutique tower with just 48 residences, each customised by residents in partnership with our in-house design team.</p>
+        <div class="project-specs-row">
+          <div class="project-spec-item">
+            <span class="project-spec-val">12</span>
+            <span class="project-spec-label">Floors</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">48</span>
+            <span class="project-spec-label">Units</span>
+          </div>
+          <div class="project-spec-item">
+            <span class="project-spec-val">2019</span>
+            <span class="project-spec-label">Delivered</span>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a href="contact.html" class="btn-primary">Enquire About Resale</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-name">Elysia</div>
+      <span class="logo-tag">Luxury Residences</span>
+      <p>Crafting extraordinary living spaces for those who accept nothing but the finest.</p>
+      <div class="footer-socials">
+        <a href="#">in</a><a href="#">ig</a><a href="#">fb</a><a href="#">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Properties</h5>
+      <ul>
+        <li><a href="properties.html">2 BHK Apartments</a></li>
+        <li><a href="properties.html">3 BHK Residences</a></li>
+        <li><a href="properties.html">Penthouses</a></li>
+        <li><a href="properties.html">Duplexes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        <li><a href="mailto:sales@elysiaresidences.com">sales@elysiaresidences.com</a></li>
+        <li><a href="#">Jubilee Hills, Hyderabad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elysia Residences Pvt. Ltd. All rights reserved.</span>
+    <span>RERA No: P02400003456</span>
+  </div>
+</footer>
+
+<div class="chatbot-wrapper">
+  <div class="chatbot-panel" id="chatPanel">
+    <div class="chatbot-header">
+      <div class="chatbot-avatar">🏛️</div>
+      <div class="chatbot-info">
+        <h4>Elysia Concierge</h4>
+        <p>Online — Typically replies instantly</p>
+      </div>
+    </div>
+    <div class="chatbot-messages" id="chatMessages">
+      <div class="chat-msg bot">Welcome to Elysia Residences 🏛️ How may I assist you today?</div>
+    </div>
+    <div class="chatbot-options">
+      <button class="chat-option" data-action="view-apartments"><span class="opt-icon">🏢</span> View Apartments</button>
+      <button class="chat-option" data-action="book-visit"><span class="opt-icon">📅</span> Book Site Visit</button>
+      <button class="chat-option" data-action="pricing"><span class="opt-icon">💰</span> Pricing Details</button>
+      <button class="chat-option" data-action="location"><span class="opt-icon">📍</span> Project Location</button>
+      <button class="chat-option" data-action="call"><span class="opt-icon">📞</span> Call Now</button>
+    </div>
+  </div>
+  <button class="chatbot-toggle" id="chatToggle">
+    <span class="chat-icon">💬</span>
+    <span class="close-icon">✕</span>
+  </button>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  // Tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanes = document.querySelectorAll('.projects-tab-pane');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanes.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+
+      // Re-trigger fade-in and progress bars for newly visible tab
+      document.querySelectorAll('#tab-' + btn.dataset.tab + ' .fade-in').forEach(el => {
+        el.classList.remove('visible');
+        setTimeout(() => el.classList.add('visible'), 50);
+      });
+
+      // Animate progress bars
+      setTimeout(() => {
+        document.querySelectorAll('#tab-' + btn.dataset.tab + ' .progress-fill').forEach(bar => {
+          bar.classList.add('animated');
+        });
+      }, 200);
+    });
+  });
+
+  // Initial progress bar animation
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('#tab-ongoing .progress-fill').forEach(bar => {
+        bar.classList.add('animated');
+      });
+    }, 600);
+  });
+</script>
+</body>
+</html>
